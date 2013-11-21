@@ -9,6 +9,7 @@
 #define QUESTIONARY_H_
 
 #include<vector>
+#include<list>
 #include<string>
 #include "Question.h"
 
@@ -20,13 +21,16 @@ public:
 	int getSteps();
 	std::string getID();
 	void addQuestion(Question* question);
-	std::vector<Question*> getQuestions();
+	void insertQuestion(Question* question, int position);
+	void removeQuestion(Question* question);
+	std::list<Question*> getQuestions();
 	void saveAnswersToFile(std::string filename);
+	void saveQuestionsToFile(std::string filename);
 
 private:
 	int version_;
 	std::string id_;
-	std::vector<Question*> questions_;
+	std::list<Question*> questions_;
 };
 
 Questionary loadQuestionsFromFile(std::string filename);

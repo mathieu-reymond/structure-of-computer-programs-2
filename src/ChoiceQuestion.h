@@ -19,6 +19,7 @@ public:
 
 	void setAnswer(std::string answer);
 	void addChoice(std::string choice);
+	void removeChoices();
 	std::vector<std::string> getChoices();
 	virtual void ask();
 

@@ -31,6 +31,10 @@ void ChoiceQuestion::addChoice(std::string choice) {
 	choices_.push_back(choice);
 }
 
+void ChoiceQuestion::removeChoices() {
+	choices_.clear();
+}
+
 std::vector<std::string> ChoiceQuestion::getChoices() {
 	return choices_;
 }

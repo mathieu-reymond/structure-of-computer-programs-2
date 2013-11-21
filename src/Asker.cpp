@@ -26,16 +26,20 @@ void Asker::ask() {
 	Questionary questionary = loadQuestionsFromFile(qFileName_);
 	std::cout << "Deze enquete bestaat uit " << questionary.getSteps() << " vragen :" <<std::endl << std::endl;
 
-	for(int i = 0; i < questionary.getQuestions().size(); ++i){
-		std::cout << i+1 << " - ";
-		questionary.getQuestions().at(i)->ask();
+	int i = 1;
+	std::cout << "test " << std::endl;
+	std::list<Question*> q = questionary.getQuestions();
+	for(std::list<Question*>::iterator it = q.begin(); it != q.end(); ++it) {
+		std::cout << i << " - ";
+		(*it)->ask();
+		i++;
 	}
 	std::cout << "Bedankt voor je deelname" << std::endl;
 	questionary.saveAnswersToFile(aFileName_);
 	std::cout << "Antwoorden werden opgeslagen in " << aFileName_ << std::endl;
 }
 
-int main(int argc, char **argv) {
-	Asker asker(argv[1], argv[2]);
-	asker.ask();
-}
+//int main(int argc, char **argv) {
+//	Asker asker(argv[1], argv[2]);
+//	asker.ask();
+//}

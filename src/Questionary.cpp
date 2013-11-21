@@ -23,6 +23,10 @@ Questionary::Questionary(std::string id, int version) {
 
 Questionary::~Questionary() {
 	// TODO Auto-generated destructor stub
+	/*for(std::list<Question*>::iterator it = questions_.begin(); it != questions_.end(); ++it) {
+		delete (*it);
+	}
+	questions_.clear();*/
 }
 
 /**
@@ -46,10 +50,22 @@ void Questionary::addQuestion(Question* question) {
 	questions_.push_back(question);
 }
 
+void Questionary::insertQuestion(Question* question, int position) {
+	std::list<Question*>::iterator it = questions_.begin();
+	for(int i = 0; i < position; ++i) {
+		++it;
+	}
+	questions_.insert(it, question);
+}
+
+void Questionary::removeQuestion(Question* question) {
+	questions_.remove(question);
+}
+
 /**
  * get all the questions
  */
-std::vector<Question*> Questionary::getQuestions() {
+std::list<Question*> Questionary::getQuestions() {
 	return questions_;
 }
 
@@ -60,8 +76,32 @@ std::vector<Question*> Questionary::getQuestions() {
 void Questionary::saveAnswersToFile(std::string filename) {
 	std::ofstream file(filename.c_str());
 	file << "ID " << getID() << std::endl;
-	for(int i = 0; i < getSteps(); ++i) {
-		file << i+1 << " " << getQuestions().at(i)->getAnswer() << std::endl;
+	int i = 1;
+	for(std::list<Question*>::iterator it = questions_.begin(); it != questions_.end(); ++it) {
+		file << i << " " << (*it)->getAnswer() << std::endl;
+		i++;
+	}
+}
+
+void Questionary::saveQuestionsToFile(std::string filename) {
+	std::ofstream file(filename.c_str());
+	file << "VERSION " << version_ << std::endl;
+	file << "ID " << getID() << std::endl;
+	file << "STEPS " << getSteps();
+	int i = 1;
+	for(std::list<Question*>::iterator it = questions_.begin(); it != questions_.end(); ++it) {
+		file << std::endl << i << " ";
+		if(typeid(*(*it)).name() == typeid(OpenQuestion).name()) {
+			file << "TEXT " << (*it)->getQuestion();
+		}
+		else if (typeid(*(*it)).name() == typeid(ChoiceQuestion).name()) {
+			file << "CHOICE " << ((ChoiceQuestion *) (*it))->getChoices().size() << " ";
+			file << (*it)->getQuestion();
+			for(int j = 0; j < ((ChoiceQuestion *) (*it))->getChoices().size(); ++j){
+				file << std::endl << ((ChoiceQuestion *) (*it))->getChoices().at(j);
+			}
+		}
+		i++;
 	}
 }
 
@@ -112,15 +152,15 @@ Questionary loadQuestionsFromFile(std::string filename) {
 			lineStream >> word;
 			if (word == "TEXT") {
 				getline(lineStream, line);
-				OpenQuestion q(line);
-				questionary->addQuestion(new OpenQuestion(line));
+				//OpenQuestion q(line);
+				questionary->addQuestion(new OpenQuestion(line.substr(1, std::string::npos)));
 			}
 			else { //word == choice
 				lineStream >> word;
 				std::istringstream itos(word);
 				itos >> choicesLeft;
 				getline(lineStream, line);
-				question = new ChoiceQuestion(line);
+				question = new ChoiceQuestion(line.substr(1, std::string::npos));
 			}
 		}
 	}

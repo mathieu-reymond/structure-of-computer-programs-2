@@ -16,6 +16,7 @@ public:
 	virtual ~Question();
 
 	std::string getQuestion();
+	void setQuestion(std::string q);
 	std::string getAnswer();
 	void setAnswer(std::string answer);
 	virtual void ask();

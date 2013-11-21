@@ -23,6 +23,9 @@ Question::~Question() {
 std::string Question::getQuestion() {
 	return question_;
 }
+void Question::setQuestion(std::string q) {
+	question_ = q;
+}
 std::string Question::getAnswer() {
 	return answer_;
 }
