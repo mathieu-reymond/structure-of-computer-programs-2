@@ -23,7 +23,7 @@ Asker::~Asker() {
 }
 
 void Asker::ask() {
-	Questionary questionary = loadQuestionsFromFile(qFileName_);
+	Questionary questionary(qFileName_);
 	std::cout << "Deze enquete bestaat uit " << questionary.getSteps() << " vragen :" <<std::endl << std::endl;
 
 	int i = 1;
@@ -39,7 +39,7 @@ void Asker::ask() {
 	std::cout << "Antwoorden werden opgeslagen in " << aFileName_ << std::endl;
 }
 
-//int main(int argc, char **argv) {
-//	Asker asker(argv[1], argv[2]);
-//	asker.ask();
-//}
+int main(int argc, char **argv) {
+	Asker asker(argv[1], argv[2]);
+	asker.ask();
+}

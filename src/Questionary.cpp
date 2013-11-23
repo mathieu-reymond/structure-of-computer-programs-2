@@ -21,12 +21,16 @@ Questionary::Questionary(std::string id, int version) {
 	version_ = version;
 }
 
+Questionary::Questionary(std::string filename) {
+	loadQuestionsFromFile(filename);
+}
+
 Questionary::~Questionary() {
 	// TODO Auto-generated destructor stub
-	/*for(std::list<Question*>::iterator it = questions_.begin(); it != questions_.end(); ++it) {
-		delete (*it);
-	}
-	questions_.clear();*/
+	//for(std::list<Question*>::iterator it = questions_.begin(); it != questions_.end(); ++it) {
+	//	delete (*it);
+	//}
+	//questions_.clear();
 }
 
 /**
@@ -105,12 +109,7 @@ void Questionary::saveQuestionsToFile(std::string filename) {
 	}
 }
 
-/**
- * returns a questionary from a specified file
- * @filename the name of the questionary file
- */
-Questionary loadQuestionsFromFile(std::string filename) {
-	Questionary* questionary(NULL);
+void Questionary::loadQuestionsFromFile(std::string filename) {
 	int version(0);
 	std::string id("");
 
@@ -135,8 +134,8 @@ Questionary loadQuestionsFromFile(std::string filename) {
 		else if (word == "ID") {
 			lineStream >> word;
 			id = word;
-			Questionary q(id, version);
-			questionary = &q;
+			id_ = id;
+			version_ = version;
 		}
 		else if (word == "STEPS") {
 			//nothing to do, steps = vector<Question>.size()
@@ -146,14 +145,14 @@ Questionary loadQuestionsFromFile(std::string filename) {
 			question->addChoice(line);
 			choicesLeft--;
 			//all choices added : add question to questionary
-			if(choicesLeft == 0) questionary->addQuestion(question);
+			if(choicesLeft == 0) addQuestion(question);
 		}
 		else { //new question
 			lineStream >> word;
 			if (word == "TEXT") {
 				getline(lineStream, line);
 				//OpenQuestion q(line);
-				questionary->addQuestion(new OpenQuestion(line.substr(1, std::string::npos)));
+				addQuestion(new OpenQuestion(line.substr(1, std::string::npos)));
 			}
 			else { //word == choice
 				lineStream >> word;
@@ -164,6 +163,4 @@ Questionary loadQuestionsFromFile(std::string filename) {
 			}
 		}
 	}
-
-	return *questionary;
 }

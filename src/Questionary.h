@@ -16,6 +16,7 @@
 class Questionary {
 public:
 	Questionary(std::string id, int version);
+	Questionary(std::string filename);
 	virtual ~Questionary();
 
 	int getSteps();
@@ -26,6 +27,7 @@ public:
 	std::list<Question*> getQuestions();
 	void saveAnswersToFile(std::string filename);
 	void saveQuestionsToFile(std::string filename);
+	void loadQuestionsFromFile(std::string filename);
 
 private:
 	int version_;
@@ -33,7 +35,5 @@ private:
 	std::list<Question*> questions_;
 };
 
-Questionary loadQuestionsFromFile(std::string filename);
-void print(Questionary);
 
 #endif /* QUESTIONARY_H_ */
