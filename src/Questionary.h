@@ -15,21 +15,28 @@
 
 class Questionary {
 public:
+	typedef std::list<Question*>::iterator Iterator;
+	Iterator begin();
+	Iterator end();
+
 	Questionary(std::string id, int version);
 	Questionary(std::string filename);
 	virtual ~Questionary();
+	Questionary& operator=(const Questionary& questionary);
 
-	int getSteps();
-	std::string getID();
+	int getVersion() const;
+	int getSteps() const;
+	std::string getID() const;
 	void addQuestion(Question* question);
-	void insertQuestion(Question* question, int position);
+	void insertQuestion(Question* question, Iterator previous);
 	void removeQuestion(Question* question);
-	std::list<Question*> getQuestions();
+
 	void saveAnswersToFile(std::string filename);
 	void saveQuestionsToFile(std::string filename);
-	void loadQuestionsFromFile(std::string filename);
 
 private:
+	void loadQuestionsFromFile(std::string filename);
+
 	int version_;
 	std::string id_;
 	std::list<Question*> questions_;

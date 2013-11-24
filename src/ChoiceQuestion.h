@@ -17,16 +17,23 @@ public:
 	ChoiceQuestion(std::string question);
 	virtual ~ChoiceQuestion();
 
+	std::string getChoice(int i) const;
+	int numberOfChoices() const;
 	void setAnswer(std::string answer);
 	void addChoice(std::string choice);
 	void removeChoices();
-	std::vector<std::string> getChoices();
+
+	virtual ChoiceQuestion* copy();
+
 	virtual void ask();
+	virtual std::ostream& save(std::ostream& out);
 
 private:
 	std::vector<std::string> choices_;
 
 	bool isValidAnswer(std::string a);
 };
+
+std::ostream& operator<<(std::ostream& out, const ChoiceQuestion& choiceQuestion);
 
 #endif /* CHOICEQUESTION_H_ */

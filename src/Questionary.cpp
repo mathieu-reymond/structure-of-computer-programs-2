@@ -13,6 +13,17 @@
 #include <iostream>
 
 /**
+ * An iterator that gives the first Question of this Questionary
+ */
+Questionary::Iterator Questionary::begin(){
+	return questions_.begin();
+}
+
+Questionary::Iterator Questionary::end(){
+	return questions_.end();
+}
+
+/**
  * A questionary containing different Questions
  * Questionary has a unique ID and a version
  */
@@ -20,31 +31,62 @@ Questionary::Questionary(std::string id, int version) {
 	id_ = id;
 	version_ = version;
 }
-
+/**
+ * Load a Questionary from a given filename
+ */
 Questionary::Questionary(std::string filename) {
 	loadQuestionsFromFile(filename);
 }
-
-Questionary::~Questionary() {
-	// TODO Auto-generated destructor stub
-	//for(std::list<Question*>::iterator it = questions_.begin(); it != questions_.end(); ++it) {
-	//	delete (*it);
-	//}
-	//questions_.clear();
-}
-
 /**
- * get this Questionary's ID
+ * Destructor : delete all questions in this Questionary
  */
-std::string Questionary::getID() {
-	return id_;
+Questionary::~Questionary() {
+	//delete all questions
+	for(Iterator it = begin(); it != end(); ++it) {
+		delete (*it);
+	}
+	questions_.clear();
+}
+/**
+ * Assignment operator
+ */
+Questionary& Questionary::operator=(const Questionary& questionary) {
+	if(this == &questionary) return *this;
+	id_ = questionary.id_;
+	version_ = questionary.version_;
+	//delete old questions
+	for(Iterator it = begin(); it != end(); ++it) {
+		delete (*it);
+	}
+	//clear question list
+	questions_.clear();
+	//fill questions with copies of questions from param
+	for(std::list<Question*>::const_iterator it = questionary.questions_.begin();
+		it != questionary.questions_.end();
+		++it) {
+		addQuestion((*it)->copy());
+	}
+	return *this;
+}
+/**
+ * Gives this Questionary's version
+ */
+int Questionary::getVersion() const {
+	return version_;
 }
 
 /**
  * get the number of questions this Questionary contains
  */
-int Questionary::getSteps() {
+int Questionary::getSteps() const{
 	return questions_.size();
+}
+
+/**
+ * get this Questionary's ID
+ */
+std::string Questionary::getID() const{
+	return id_;
 }
 
 /**
@@ -53,24 +95,17 @@ int Questionary::getSteps() {
 void Questionary::addQuestion(Question* question) {
 	questions_.push_back(question);
 }
-
-void Questionary::insertQuestion(Question* question, int position) {
-	std::list<Question*>::iterator it = questions_.begin();
-	for(int i = 0; i < position; ++i) {
-		++it;
-	}
-	questions_.insert(it, question);
+/**
+ * insert a Question after the Question pointed by Iterator
+ */
+void Questionary::insertQuestion(Question* question, Iterator previous) {
+	questions_.insert(previous, question);
 }
-
+/**
+ * remove a given Question
+ */
 void Questionary::removeQuestion(Question* question) {
 	questions_.remove(question);
-}
-
-/**
- * get all the questions
- */
-std::list<Question*> Questionary::getQuestions() {
-	return questions_;
 }
 
 /**
@@ -79,36 +114,31 @@ std::list<Question*> Questionary::getQuestions() {
  */
 void Questionary::saveAnswersToFile(std::string filename) {
 	std::ofstream file(filename.c_str());
-	file << "ID " << getID() << std::endl;
+	file << "ID " << getID();
 	int i = 1;
-	for(std::list<Question*>::iterator it = questions_.begin(); it != questions_.end(); ++it) {
-		file << i << " " << (*it)->getAnswer() << std::endl;
+	for(Questionary::Iterator it = begin(); it != end(); ++it) {
+		file << std::endl << i << " " << (*it)->getAnswer();
 		i++;
 	}
 }
-
+/**
+ * Save the Question's to a file
+ */
 void Questionary::saveQuestionsToFile(std::string filename) {
 	std::ofstream file(filename.c_str());
-	file << "VERSION " << version_ << std::endl;
-	file << "ID " << getID() << std::endl;
-	file << "STEPS " << getSteps();
-	int i = 1;
-	for(std::list<Question*>::iterator it = questions_.begin(); it != questions_.end(); ++it) {
-		file << std::endl << i << " ";
-		if(typeid(*(*it)).name() == typeid(OpenQuestion).name()) {
-			file << "TEXT " << (*it)->getQuestion();
+		file << "VERSION " << version_ << std::endl;
+		file << "ID " << getID() << std::endl;
+		file << "STEPS " << getSteps();
+		int i = 1;
+		for(Questionary::Iterator it = begin(); it != end(); ++it) {
+			file << std::endl << i << " ";
+			(*it)->save(file);
+			i++;
 		}
-		else if (typeid(*(*it)).name() == typeid(ChoiceQuestion).name()) {
-			file << "CHOICE " << ((ChoiceQuestion *) (*it))->getChoices().size() << " ";
-			file << (*it)->getQuestion();
-			for(int j = 0; j < ((ChoiceQuestion *) (*it))->getChoices().size(); ++j){
-				file << std::endl << ((ChoiceQuestion *) (*it))->getChoices().at(j);
-			}
-		}
-		i++;
-	}
 }
-
+/**
+ * Load a Questionary from a given file
+ */
 void Questionary::loadQuestionsFromFile(std::string filename) {
 	int version(0);
 	std::string id("");
@@ -151,7 +181,6 @@ void Questionary::loadQuestionsFromFile(std::string filename) {
 			lineStream >> word;
 			if (word == "TEXT") {
 				getline(lineStream, line);
-				//OpenQuestion q(line);
 				addQuestion(new OpenQuestion(line.substr(1, std::string::npos)));
 			}
 			else { //word == choice

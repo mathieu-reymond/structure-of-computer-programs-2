@@ -18,8 +18,22 @@ ChoiceQuestion::ChoiceQuestion(std::string question) : Question(question), choic
 ChoiceQuestion::~ChoiceQuestion() {
 	// TODO Auto-generated destructor stub
 }
+/**
+ * Get the choice at a given index i
+ */
+std::string ChoiceQuestion::getChoice(int i) const {
+	return choices_.at(i);
+}
+/**
+ * The number of choices this ChoiceQuestion has
+ */
+int ChoiceQuestion::numberOfChoices() const {
+	return choices_.size();
+}
 
-
+/**
+ * set the answer to the string answer
+ */
 void ChoiceQuestion::setAnswer(std::string answer) {
 	answer_ = answer;
 }
@@ -30,13 +44,20 @@ void ChoiceQuestion::setAnswer(std::string answer) {
 void ChoiceQuestion::addChoice(std::string choice) {
 	choices_.push_back(choice);
 }
-
+/**
+ * remove all the choices
+ */
 void ChoiceQuestion::removeChoices() {
 	choices_.clear();
 }
-
-std::vector<std::string> ChoiceQuestion::getChoices() {
-	return choices_;
+/**
+ * Get a copy from this ChoiceQuestion
+ */
+ChoiceQuestion* ChoiceQuestion::copy() {
+	ChoiceQuestion* q = new ChoiceQuestion(getQuestion());
+	q->answer_ = getAnswer();
+	q->choices_ = choices_;
+	return q;
 }
 
 /**
@@ -45,13 +66,13 @@ std::vector<std::string> ChoiceQuestion::getChoices() {
  */
 void ChoiceQuestion::ask() {
 	std::cout << "Q : " << getQuestion() << std::endl;
-	for(int i = 0; i < getChoices().size(); ++i) {
-		std::cout << " " << (i+1) << ") : " << getChoices().at(i) << std::endl;
+	for(int i = 0; i < numberOfChoices(); ++i) {
+		std::cout << " " << (i+1) << ") : " << getChoice(i) << std::endl;
 	}
 
 	std::string s;
 	do {
-		std::cout << "A (1 - " << getChoices().size() << ") : ";
+		std::cout << "A (1 - " << numberOfChoices() << ") : ";
 		getline(std::cin, s);
 	} while (!isValidAnswer(s));
 	setAnswer(s);
@@ -64,5 +85,18 @@ bool ChoiceQuestion::isValidAnswer(std::string a) {
 	std::istringstream strm(a);
 	int conv;
 	strm >> conv;
-	return conv >=1 && conv <= getChoices().size();
+	return conv >=1 && conv <= numberOfChoices();
+}
+
+std::ostream& ChoiceQuestion::save(std::ostream& out) {
+	return operator <<(out, *this);
+}
+
+std::ostream& operator<<(std::ostream& out, const ChoiceQuestion& choiceQuestion) {
+	out << "CHOICE " << choiceQuestion.numberOfChoices() << " " << (Question&) choiceQuestion;
+	for(int i = 0; i < choiceQuestion.numberOfChoices(); ++i) {
+		out << std::endl << choiceQuestion.getChoice(i);
+	}
+
+	return out;
 }
