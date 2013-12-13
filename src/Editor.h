@@ -22,8 +22,9 @@ public:
 private:
 	bool processCommand();
 	void list();
-	void insertText(OpenQuestion *question, int position);
+	void insert(Question *question, int position);
 	void insertChoice(ChoiceQuestion *question, int position);
+	void insertScale(std::string, int position);
 	void editQuestion(Question *question);
 	void editChoices(ChoiceQuestion *question);
 	void remove(Question *question);

@@ -117,7 +117,7 @@ void Questionary::saveAnswersToFile(std::string filename) {
 	file << "ID " << getID();
 	int i = 1;
 	for(Questionary::Iterator it = begin(); it != end(); ++it) {
-		file << std::endl << i << " " << (*it)->getAnswer();
+		//file << std::endl << i << " " << (*it)->getAnswer();
 		i++;
 	}
 }

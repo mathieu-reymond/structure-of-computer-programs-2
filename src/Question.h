@@ -16,20 +16,20 @@ public:
 	virtual ~Question();
 
 	std::string getQuestion() const;
-	std::string getAnswer() const;
 	void setQuestion(std::string q);
-	virtual void setAnswer(std::string answer);
 
-	virtual void ask();
+	virtual void ask() = 0;
 	virtual std::ostream& save(std::ostream& out);
 
-	virtual Question* copy();
+	virtual Question* copy() = 0;
+
+	friend std::ostream& operator<<(std::ostream& out, const Question& question);
 
 protected:
-	std::string question_;
-	std::string answer_;
-};
+	virtual std::string print() const;
 
-std::ostream& operator<<(std::ostream& out, const Question& question);
+	std::string question_;
+
+};
 
 #endif /* QUESTION_H_ */

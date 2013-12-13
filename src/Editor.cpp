@@ -7,6 +7,11 @@
 
 #include "Editor.h"
 #include "Question.h"
+#include "BoolQuestion.h"
+#include "ScaleQuestion.h"
+#include "QuestionList.h"
+#include "GroupQuestion.h"
+#include "Path.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -70,10 +75,16 @@ bool Editor::processCommand() {
 			std::string line;
 			getline(lineStream, line);
 			if(word == "text") {
-				insertText(new OpenQuestion(line.substr(1, std::string::npos)), position);
+				insert(new OpenQuestion(line.substr(1, std::string::npos)), position);
+			}
+			else if(word == "bool") {
+				insert(new BoolQuestion(line.substr(1, std::string::npos)), position);
 			}
 			else if(word == "choice") {
 				insertChoice(new ChoiceQuestion(line.substr(1, std::string::npos)), position);
+			}
+			else if(word == "scale") {
+				insertScale(line.substr(1, std::string::npos), position);
 			}
 			else {
 				std::cout << "Geen geldig type vraag.";
@@ -150,18 +161,14 @@ void Editor::list() {
 	else {
 		int i = 1;
 		for(Questionary::Iterator it = questionary_.begin(); it != questionary_.end(); ++it) {
-			std::cout << i;
-			typeid(*(*it)).name() == typeid(OpenQuestion).name() ? std::cout << " TEXT ": std::cout << " CHOICE ";
-			std::cout << (*it)->getQuestion() << std::endl;
+			std::cout << i << " ";
+			std::cout << (**it) << std::endl;
 			i++;
 		}
 	}
 }
-/**
- * insert an OpenQuestion at a given position
- * 1 <= position <= N with N=number of Questions
- */
-void Editor::insertText(OpenQuestion *question, int position) {
+
+void Editor::insert(Question *question, int position) {
 	Questionary::Iterator it = questionary_.begin();
 	for(int i = 0; i < position-1; ++i) {
 		++it;
@@ -183,6 +190,31 @@ void Editor::insertChoice(ChoiceQuestion *question, int position) {
 		questionary_.insertQuestion(question, it);
 		std::cout << "Vraag (" << question->getQuestion() << ") toegevoegd op plaats " << position << std::endl;
 		unsavedChanges = true;
+	}
+}
+
+void Editor::insertScale(std::string question, int position) {
+	Questionary::Iterator it = questionary_.begin();
+	for(int i = 0; i < position-1; ++i) {
+		++it;
+	}
+	int lower, upper;
+	std::string s;
+	std::cout << "Lower bound : ";
+	getline(std::cin, s);
+	std::istringstream lstrm(s);
+	lstrm >> lower;
+	std::cout << "Upper bound : ";
+	getline(std::cin, s);
+	std::istringstream ustrm(s);
+	ustrm >> upper;
+	if(lower < upper) {
+		questionary_.insertQuestion(new ScaleQuestion(question, lower, upper), it);
+		std::cout << "Vraag (" << question<< ") toegevoegd op plaats " << position << std::endl;
+		unsavedChanges = true;
+	}
+	else {
+		std::cout << "Ongeldige lower en upper bound." << std::endl;
 	}
 }
 /**
@@ -271,12 +303,29 @@ bool Editor::isValidPosition(int position) {
 }
 
 int main(int argc, char **argv) {
-	if(argc != 2) {
+	/*if(argc != 2) {
 		std::cout << "ongeldig aantal argumenten : verwacht=1, aantal=" << argc-1 << std::endl;
 	}
 	else {
 		Editor editor(argv[1]);
 		editor.run();
+	}*/
+	QuestionList ql;
+	ql.add(new OpenQuestion("one"));
+	ql.add(new OpenQuestion("two"));
+	ql.add(new OpenQuestion("three"));
+	GroupQuestion*gq  = new  GroupQuestion("group");
+	gq->add(new OpenQuestion("gone"));
+	gq->add(new OpenQuestion("gtwo"));
+	ql.add(gq);
+	ql.add(new OpenQuestion("four"));
+	/*for(QuestionList::Iterator it = gq->begin(); it != gq->end(); ++it) {
+			Question* q = (*it);
+			std::cout << *q << std::endl;
+		}*/
+	for(QuestionList::Iterator it = ql.begin(); it != ql.end(); ++it) {
+		Question* q = (*it);
+		std::cout << it.getPath().print() << *q << std::endl;
 	}
 }
 

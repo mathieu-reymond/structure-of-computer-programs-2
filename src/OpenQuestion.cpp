@@ -11,7 +11,7 @@
 /**
  * a subclass of Question, the answer is a line of text
  */
-OpenQuestion::OpenQuestion(std::string question) : Question(question) {
+OpenQuestion::OpenQuestion(std::string question) : AnswerQuestion<std::string>(question) {
 
 }
 
@@ -27,12 +27,34 @@ OpenQuestion* OpenQuestion::copy() {
 	return q;
 }
 
+void OpenQuestion::ask() {
+	std::cout << "Q : " << getQuestion() << std::endl << "A : ";
+	std::string s;
+	getline(std::cin, s);
+	setAnswer(s);
+}
+
 std::ostream& OpenQuestion::save(std::ostream& out) {
 	return operator <<(out, *this);
 }
 
+std::string OpenQuestion::convertString(std::string s) const{
+	return s;
+}
+
+std::string OpenQuestion::print() const {
+	std::string type("TEXT ");
+	type.append(AnswerQuestion<std::string>::print());
+
+	return type;
+}
+
+bool OpenQuestion::isValidAnswer(std::string a) const {
+	return true;
+}
+
 std::ostream& operator<<(std::ostream& out, const OpenQuestion& openQuestion) {
-	return out << "TEXT " << (Question&) openQuestion;
+	return out << openQuestion.print();
 }
 
 
