@@ -22,12 +22,14 @@ public:
 private:
 	bool processCommand();
 	void list();
-	void insert(Question *question, int position);
-	void insertChoice(ChoiceQuestion *question, int position);
-	void insertScale(std::string, int position);
+	void questionDispatch(std::stringstream& stream, QuestionList::Iterator next);
+	void insert(Question *question, QuestionList::Iterator position);
+	void insertChoice(ChoiceQuestion *question, QuestionList::Iterator position);
+	void insertScale(std::string, QuestionList::Iterator position);
 	void editQuestion(Question *question);
 	void editChoices(ChoiceQuestion *question);
 	void remove(Question *question);
+	void test();
 	void save();
 	void quit();
 

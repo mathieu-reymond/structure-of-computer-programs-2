@@ -11,13 +11,16 @@
 #include<vector>
 #include<list>
 #include<string>
+#include "QuestionList.h"
 #include "Question.h"
+#include "ChoiceQuestion.h"
+#include "BoolQuestion.h"
+#include "GroupQuestion.h"
+#include "OpenQuestion.h"
+#include "ScaleQuestion.h"
 
-class Questionary {
+class Questionary : public QuestionList{
 public:
-	typedef std::list<Question*>::iterator Iterator;
-	Iterator begin();
-	Iterator end();
 
 	Questionary(std::string id, int version);
 	Questionary(std::string filename);
@@ -25,11 +28,9 @@ public:
 	Questionary& operator=(const Questionary& questionary);
 
 	int getVersion() const;
-	int getSteps() const;
 	std::string getID() const;
-	void addQuestion(Question* question);
-	void insertQuestion(Question* question, Iterator previous);
-	void removeQuestion(Question* question);
+
+	void setVersion(int version);
 
 	void saveAnswersToFile(std::string filename);
 	void saveQuestionsToFile(std::string filename);
@@ -37,9 +38,13 @@ public:
 private:
 	void loadQuestionsFromFile(std::string filename);
 
+	Question* loadQuestion(std::fstream& file);
+	ChoiceQuestion* loadChoiceQuestion(std::fstream& file, std::istringstream& line);
+	ScaleQuestion* loadScaleQuestion(std::istringstream& line);
+	GroupQuestion* loadGroupQuestion(std::fstream& file, std::istringstream& line);
+
 	int version_;
 	std::string id_;
-	std::list<Question*> questions_;
 };
 
 

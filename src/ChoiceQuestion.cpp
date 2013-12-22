@@ -19,12 +19,15 @@ ChoiceQuestion::~ChoiceQuestion() {
 }
 /**
  * Get the choice at a given index i
+ * @param i the index
+ * @return the choice at i
  */
 std::string ChoiceQuestion::getChoice(int i) const {
 	return choices_.at(i);
 }
 /**
  * The number of choices this ChoiceQuestion has
+ * @return the number of choices
  */
 int ChoiceQuestion::numberOfChoices() const {
 	return choices_.size();
@@ -32,6 +35,7 @@ int ChoiceQuestion::numberOfChoices() const {
 
 /**
  * add a choice
+ * @param the choice to add
  */
 void ChoiceQuestion::addChoice(std::string choice) {
 	choices_.push_back(choice);
@@ -44,6 +48,7 @@ void ChoiceQuestion::removeChoices() {
 }
 /**
  * Get a copy from this ChoiceQuestion
+ * @return a copy
  */
 ChoiceQuestion* ChoiceQuestion::copy() {
 	ChoiceQuestion* q = new ChoiceQuestion(getQuestion());
@@ -65,37 +70,54 @@ void ChoiceQuestion::ask() {
 	std::string s;
 	do {
 		std::cout << "A (1 - " << numberOfChoices() << ") : ";
-		getline(std::cin, s);
+		s = input();
 	} while (!isValidAnswer(s));
 	setAnswer(convertString(s));
 }
 
 /**
- * private method to check an answer's validity (by converting answer to integer)
+ * Checks if a string is a valid answer to this Question
+ * @param a the string to check
+ * @return true if valid, false otherwise
  */
 bool ChoiceQuestion::isValidAnswer(std::string a) const{
 	int conv(convertString(a));
 	return conv >=1 && conv <= numberOfChoices();
 }
-
+/**
+ * Convert a string to an integer
+ * @param the string to convert
+ * @return the converted integer
+ */
 int ChoiceQuestion::convertString(std::string s) const{
 	std::istringstream strm(s);
 	int conv;
 	strm >> conv;
 	return conv;
 }
-
+/**
+ * save this Question
+ * @param out the stream where this Question will be saved
+ * @return the modified stream
+ */
 std::ostream& ChoiceQuestion::save(std::ostream& out) {
-	return operator <<(out, *this);
+	out << "CHOICE " << numberOfChoices() << AnswerQuestion<int>::print() << printChoices();
+	return out;
 }
-
+/**
+ * Convert this Question to a string
+ * @return a string representing this Question
+ */
 std::string ChoiceQuestion::print() const {
 	std::string type("CHOICE ");
 	type.append(AnswerQuestion<int>::print());
 
 	return type;
 }
-
+/**
+ * Convert the choices to a string
+ * @return a string containing all the choices
+ */
 std::string ChoiceQuestion::printChoices() const {
 	std::string str(" ");
 	for(int i = 0; i < numberOfChoices(); ++i) {
@@ -104,7 +126,12 @@ std::string ChoiceQuestion::printChoices() const {
 	}
 	return str;
 }
-
+/**
+ * Write this Question on a stream
+ * @param out the stream where this Question will be written
+ * @param question the Question to write
+ * @return the modified stream
+ */
 std::ostream& operator<<(std::ostream& out, const ChoiceQuestion& choiceQuestion) {
 
 	return out << choiceQuestion.print() << choiceQuestion.printChoices();

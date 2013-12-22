@@ -9,15 +9,25 @@
 #define ASKER_H_
 
 #include<string>
+#include<set>
+#include"Questionary.h"
 
 class Asker {
 public:
 	Asker(std::string qFileName, std::string aFileName);
+	Asker(Questionary& questionary);
 	virtual ~Asker();
 
 	void ask();
+	void save();
 private:
-	std::string qFileName_; //where questionary is written
+	void list();
+	bool processCommand(std::string command, QuestionList::Iterator& it);
+	bool isCompleted(QuestionList& ql);
+	void updateAnswered();
+
+	std::set<Question*> answered_;
+	Questionary questionary_;
 	std::string aFileName_; //where answers are written
 };
 

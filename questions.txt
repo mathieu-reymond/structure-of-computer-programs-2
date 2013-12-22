@@ -1,14 +1,20 @@
-VERSION 1
+VERSION 2
 ID bb8c7729-c57c-4acb-bb35-35ecfa89e778
-STEPS 5
+STEPS 6
 1 TEXT Wat is je naam?
 2 CHOICE 3 Wat is je richting?
 CW
 BIO
 ING
 3 TEXT Wat is je reden om C++ te leren?
-4 CHOICE 3 Hoeveel ervaring heb je met andere OO-talen?
+4 GROUP 2 scale en subgroup
+4.1 SCALE 1 10 een scale van 1 tot 10
+4.2 GROUP 3 een subgroup met bool
+4.2.1 BOOL een bool
+4.2.2 TEXT een text
+4.2.3 SCALE 2 4 een andere scale
+5 CHOICE 3 Hoeveel ervaring heb je met andere OO-talen?
 Geen ervaring
 Gemiddeld
 Expert
-5 TEXT hello ?
+6 TEXT hello ?
