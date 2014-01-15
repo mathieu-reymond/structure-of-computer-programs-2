@@ -47,8 +47,8 @@ public:
 		Path path_;
 	};
 
-	void add(Question* q);
-	void insert(Question* q, Iterator previous);
+	virtual void add(Question* q);
+	virtual void insert(Question* q, Iterator previous);
 	void remove(Question* q);
 	int size() const;
 

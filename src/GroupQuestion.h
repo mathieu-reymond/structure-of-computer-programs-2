@@ -8,7 +8,8 @@
 #ifndef GROUPQUESTION_H_
 #define GROUPQUESTION_H_
 
-#include "Question.h";
+#include"Wt/WTreeTableNode"
+#include "Question.h"
 #include "QuestionList.h"
 #include<string>
 
@@ -23,9 +24,14 @@ public:
 
 	virtual std::string print() const;
 
+	virtual Wt::WTreeTableNode* widget();
+
 	friend std::ostream& operator<<(std::ostream& out, const GroupQuestion& question) {
 		return out << question.print();
 	}
+
+	virtual void add(Question* q);
+	virtual void insert(Question* q, Iterator previous);
 };
 
 #endif /* GROUPQUESTION_H_ */

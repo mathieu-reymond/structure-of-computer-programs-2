@@ -8,6 +8,7 @@
 #ifndef OPENQUESTION_H_
 #define OPENQUESTION_H_
 
+#include "Wt/WTreeTableNode"
 #include "AnswerQuestion.h"
 #include<string>
 
@@ -20,6 +21,8 @@ public:
 
 	virtual void ask();
 	virtual std::ostream& save(std::ostream& out);
+
+	virtual Wt::WTreeTableNode* widget();
 
 	friend std::ostream& operator<<(std::ostream& out, const OpenQuestion& openQuestion);
 

@@ -6,7 +6,14 @@
  */
 
 #include "OpenQuestion.h"
+
+#include <boost/bind.hpp>
 #include <iostream>
+
+#include "Wt/WContainerWidget"
+#include "Wt/WLineEdit"
+#include "Wt/WSignal"
+#include "Wt/WString"
 
 /**
  * a subclass of Question, the answer is a line of text
@@ -78,4 +85,14 @@ std::ostream& operator<<(std::ostream& out, const OpenQuestion& openQuestion) {
 	return out << openQuestion.print();
 }
 
+Wt::WTreeTableNode* OpenQuestion::widget() {
+	Wt::WTreeTableNode* node = Question::widget();
+
+	Wt::WContainerWidget* container = new Wt::WContainerWidget();
+	Wt::WLineEdit* text = new Wt::WLineEdit(container);
+	text->changed().connect(boost::bind(&OpenQuestion::setAnswer, this, text->text().toUTF8()));
+
+	node->setColumnWidget(1, container);
+	return node;
+}
 

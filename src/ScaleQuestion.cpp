@@ -6,7 +6,16 @@
  */
 
 #include "ScaleQuestion.h"
-#include <sstream>
+
+#include <boost/bind.hpp>
+#include <iostream>
+//#include <sstream>
+
+#include "Wt/WContainerWidget"
+#include "Wt/WSignal"
+#include "Wt/WSlider"
+#include "Wt/WTreeTableNode"
+
 /**
  * Makes a new ScaleQuestion
  * @param question the text
@@ -103,5 +112,23 @@ bool ScaleQuestion::isValidAnswer(std::string a) const {
  */
 std::ostream& operator<<(std::ostream& out, const ScaleQuestion& question) {
 	return out << question.print();
+}
+
+Wt::WTreeTableNode* ScaleQuestion::widget() {
+	Wt::WTreeTableNode* node = Question::widget();
+
+	Wt::WContainerWidget* container = new Wt::WContainerWidget();
+	Wt::WSlider* slider = new Wt::WSlider(container);
+
+	slider->setMinimum(getLowerLimit());
+	slider->setMaximum(getUpperLimit());
+	slider->setTickInterval(1);
+	slider->setTickPosition(Wt::WSlider::TicksAbove);
+	slider->setValue(getLowerLimit());
+
+	slider->valueChanged().connect(boost::bind(&ScaleQuestion::setAnswer, this, slider->value()));
+
+	node->setColumnWidget(1, container);
+	return node;
 }
 

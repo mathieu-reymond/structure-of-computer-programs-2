@@ -94,11 +94,20 @@ void Questionary::saveAnswersToFile(std::string filename) {
 			file << std::endl << it.getPath().print() << " ";
 			//wow, much cast, many beautiful
 			AnswerQuestion<std::string>* aqs = dynamic_cast<AnswerQuestion<std::string>*>(*it);
-			if(aqs) file << aqs->getAnswer();
+			if(aqs) {
+				if(aqs->isAnswered()) file << aqs->getAnswer();
+				else file << "NULL";
+			}
 			AnswerQuestion<int>* aqi = dynamic_cast<AnswerQuestion<int>*>(*it);
-			if(aqi) file << aqi->getAnswer();
+			if(aqi) {
+				if(aqi->isAnswered()) file << aqi->getAnswer();
+				else file << "NULL";
+			}
 			AnswerQuestion<bool>* aqb = dynamic_cast<AnswerQuestion<bool>*>(*it);
-			if(aqb) file << aqb->getAnswer();
+			if(aqb) {
+				if(aqb->isAnswered()) file << aqb->getAnswer();
+				else file << "NULL";
+			}
 		}
 	}
 }
@@ -243,3 +252,4 @@ void Questionary::loadQuestionsFromFile(std::string filename) {
 		add(loadQuestion(file));
 	}
 }
+

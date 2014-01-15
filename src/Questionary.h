@@ -32,8 +32,8 @@ public:
 
 	void setVersion(int version);
 
-	void saveAnswersToFile(std::string filename);
 	void saveQuestionsToFile(std::string filename);
+	void saveAnswersToFile(std::string filename);
 
 private:
 	void loadQuestionsFromFile(std::string filename);

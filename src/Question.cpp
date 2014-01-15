@@ -6,13 +6,24 @@
  */
 
 #include "Question.h"
+
 #include <iostream>
+
+#include "Wt/WColor"
+#include "Wt/WCssDecorationStyle"
 
 /**
  * A Question class containing a question and an answer
  */
 Question::Question(std::string question) {
 	question_ = question;
+	optional_ = false;
+	std::string optional("#opt");
+	if(question.length() > 4 && question.substr(question.length() - optional.length(),  std::string::npos) == optional) {
+		question_ = question.substr(0, question.length() - 4);
+		optional_ = true;
+	}
+
 }
 
 Question::~Question() {
@@ -31,6 +42,15 @@ std::string Question::getQuestion() const {
  */
 void Question::setQuestion(std::string q) {
 	question_ = q;
+	std::string optional("#opt");
+	if(q.length() > 4 && q.substr(q.length() - optional.length(),  std::string::npos) == optional) {
+		question_ = q.substr(0, q.length() - 4);
+		optional_ = true;
+	}
+}
+
+bool Question::isOptional() {
+	return optional_;
 }
 /**
  * save this Question
@@ -55,5 +75,15 @@ std::string Question::print() const{
  */
 std::ostream& operator<<(std::ostream& out, const Question& question) {
 	return out << question.print();
+}
+
+Wt::WTreeTableNode* Question::widget() {
+	Wt::WCssDecorationStyle style;
+	style.setForegroundColor(Wt::WColor(0,255,0));
+
+	Wt::WTreeTableNode* node = new Wt::WTreeTableNode(getQuestion(), 0);
+	if(isOptional()) node->setDecorationStyle(style);
+
+	return node;
 }
 

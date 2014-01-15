@@ -27,6 +27,8 @@ public:
 	virtual void ask();
 	virtual std::ostream& save(std::ostream& out);
 
+	virtual Wt::WTreeTableNode* widget();
+
 	friend std::ostream& operator<<(std::ostream& out, const ChoiceQuestion& choiceQuestion);
 
 private:

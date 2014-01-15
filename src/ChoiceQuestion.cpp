@@ -6,8 +6,15 @@
  */
 
 #include "ChoiceQuestion.h"
+
+#include <boost/bind.hpp>
 #include <iostream>
-#include <sstream>
+//#include <sstream>
+
+#include "Wt/WComboBox"
+#include "Wt/WContainerWidget"
+#include "Wt/WSignal"
+#include "Wt/WTreeTableNode"
 
 /**
  * a subclass of Question, the answer must be one of the specified choices
@@ -135,4 +142,18 @@ std::string ChoiceQuestion::printChoices() const {
 std::ostream& operator<<(std::ostream& out, const ChoiceQuestion& choiceQuestion) {
 
 	return out << choiceQuestion.print() << choiceQuestion.printChoices();
+}
+
+Wt::WTreeTableNode* ChoiceQuestion::widget() {
+	Wt::WTreeTableNode* node = Question::widget();
+
+	Wt::WContainerWidget* container = new Wt::WContainerWidget();
+	Wt::WComboBox* comboBox = new Wt::WComboBox(container);
+	for(int i = 0; i < numberOfChoices(); ++i) {
+		comboBox->addItem(getChoice(i));
+	}
+	comboBox->changed().connect(boost::bind(&ChoiceQuestion::setAnswer, this, comboBox->currentIndex()+1));
+
+	node->setColumnWidget(1, container);
+	return node;
 }

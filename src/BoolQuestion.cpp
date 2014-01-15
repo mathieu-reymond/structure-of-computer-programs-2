@@ -5,8 +5,11 @@
  *      Author: Mathieu
  */
 
+#include "Wt/WText"
+#include "Wt/WButtonGroup"
+#include "Wt/WRadioButton"
 #include "BoolQuestion.h"
-
+#include<boost/bind.hpp>
 #include<sstream>
 
 BoolQuestion::BoolQuestion(std::string question) : AnswerQuestion<bool>(question) {
@@ -80,4 +83,20 @@ std::string BoolQuestion::print() const {
  */
 std::ostream& operator<<(std::ostream& out, const BoolQuestion& question) {
 	return out << question.print();
+}
+
+Wt::WTreeTableNode* BoolQuestion::widget() {
+	Wt::WTreeTableNode* node = Question::widget();
+
+	Wt::WContainerWidget* container = new Wt::WContainerWidget();
+	Wt::WButtonGroup* group = new Wt::WButtonGroup(container);
+	Wt::WRadioButton* yes = new Wt::WRadioButton(container);
+	Wt::WRadioButton* no = new Wt::WRadioButton(container);
+	group->addButton(yes);
+	group->addButton(no);
+	yes->checked().connect(boost::bind(&BoolQuestion::setAnswer,  this, true));
+	no->checked().connect(boost::bind(&BoolQuestion::setAnswer, this, false));
+
+	node->setColumnWidget(1, container);
+	return node;
 }

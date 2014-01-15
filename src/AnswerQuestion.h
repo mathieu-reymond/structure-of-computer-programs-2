@@ -8,6 +8,7 @@
 #ifndef ANSWERQUESTION_H_
 #define ANSWERQUESTION_H_
 
+#include "Wt/WTreeTableNode"
 #include "Question.h"
 #include <string>
 #include <iostream>
@@ -20,6 +21,7 @@ public:
 
 	T getAnswer() const;
 	virtual void setAnswer(T answer);
+	virtual bool isAnswered() const;
 
 	virtual void ask() = 0;
 	virtual std::ostream& save(std::ostream& out);
@@ -37,6 +39,7 @@ protected:
 	std::string input();
 
 	T answer_;
+	bool answered_;
 };
 
 /**
@@ -44,7 +47,8 @@ protected:
  */
 template<typename T>
 AnswerQuestion<T>::AnswerQuestion(std::string question) : Question(question){
-	//answer_ = NULL;
+	//answer_ = void;
+	answered_ = false;
 }
 
 template<typename T>
@@ -66,7 +70,15 @@ T AnswerQuestion<T>::getAnswer() const {
  */
 template<typename T>
 void AnswerQuestion<T>::setAnswer(T answer) {
+	answered_ = true;
 	answer_ = answer;
+
+	std::cout << "answer changed to : " << answer << std::endl;
+}
+
+template<typename T>
+bool AnswerQuestion<T>::isAnswered() const{
+	return answered_;
 }
 
 /**

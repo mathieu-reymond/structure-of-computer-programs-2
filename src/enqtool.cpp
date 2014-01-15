@@ -17,7 +17,7 @@ void help() {
 	std::cout << "   1 : Naam van het vragenbestand" << std::endl;
 	std::cout << "   2 : Naam van het antwoordbestand" << std::endl;
 }
-
+/*
 int main(int argc, char **argv) {
 	if(argc == 2) {
 		Editor editor(argv[1]);
@@ -31,4 +31,4 @@ int main(int argc, char **argv) {
 	else {
 		help();
 	}
-}
+}*/

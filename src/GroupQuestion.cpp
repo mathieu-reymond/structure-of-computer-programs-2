@@ -58,3 +58,29 @@ std::string GroupQuestion::print() const {
 	return type;
 }
 
+void GroupQuestion::add(Question* q) {
+	QuestionList::add(q);
+	if(isOptional() && !q->isOptional()) {
+		std::string text(q->getQuestion());
+		text.append("#opt");
+		q->setQuestion(text);
+	}
+}
+void GroupQuestion::insert(Question* q, Iterator previous) {
+	QuestionList::insert(q, previous);
+	if(isOptional() && !q->isOptional()) {
+		std::string text(q->getQuestion());
+		text.append("#opt");
+		q->setQuestion(text);
+	}
+}
+
+Wt::WTreeTableNode* GroupQuestion::widget() {
+	Wt::WTreeTableNode* node = Question::widget();
+	for(Iterator it = begin(); it != end(); it.levelForward()) {
+		Wt::WTreeTableNode* child = (*it)->widget();
+		node->addChildNode(child);
+	}
+
+	return node;
+}
