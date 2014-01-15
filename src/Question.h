@@ -8,7 +8,7 @@
 #ifndef QUESTION_H_
 #define QUESTION_H_
 
-#include"Wt/WTreeTableNode"
+#include"Wt/WContainerWidget"
 #include <string>
 
 class Question {
@@ -25,7 +25,7 @@ public:
 
 	virtual Question* copy() = 0;
 
-	virtual Wt::WTreeTableNode* widget();
+	virtual Wt::WContainerWidget* widget() = 0;
 
 	friend std::ostream& operator<<(std::ostream& out, const Question& question);
 

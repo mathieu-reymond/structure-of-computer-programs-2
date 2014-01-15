@@ -114,8 +114,7 @@ std::ostream& operator<<(std::ostream& out, const ScaleQuestion& question) {
 	return out << question.print();
 }
 
-Wt::WTreeTableNode* ScaleQuestion::widget() {
-	Wt::WTreeTableNode* node = Question::widget();
+Wt::WContainerWidget* ScaleQuestion::widget() {
 
 	Wt::WContainerWidget* container = new Wt::WContainerWidget();
 	Wt::WSlider* slider = new Wt::WSlider(container);
@@ -128,7 +127,6 @@ Wt::WTreeTableNode* ScaleQuestion::widget() {
 
 	slider->valueChanged().connect(boost::bind(&ScaleQuestion::setAnswer, this, slider->value()));
 
-	node->setColumnWidget(1, container);
-	return node;
+	return container;
 }
 

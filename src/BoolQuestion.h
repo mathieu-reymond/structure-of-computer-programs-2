@@ -22,7 +22,7 @@ public:
 	virtual void ask();
 	virtual std::ostream& save(std::ostream& out);
 
-	virtual Wt::WTreeTableNode* widget();
+	virtual Wt::WContainerWidget* widget();
 
 	friend std::ostream& operator<<(std::ostream& out, const BoolQuestion& question);
 

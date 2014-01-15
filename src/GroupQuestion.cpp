@@ -75,12 +75,7 @@ void GroupQuestion::insert(Question* q, Iterator previous) {
 	}
 }
 
-Wt::WTreeTableNode* GroupQuestion::widget() {
-	Wt::WTreeTableNode* node = Question::widget();
-	for(Iterator it = begin(); it != end(); it.levelForward()) {
-		Wt::WTreeTableNode* child = (*it)->widget();
-		node->addChildNode(child);
-	}
+Wt::WContainerWidget* GroupQuestion::widget() {
 
-	return node;
+	return new Wt::WContainerWidget();
 }

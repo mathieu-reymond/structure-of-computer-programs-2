@@ -85,8 +85,7 @@ std::ostream& operator<<(std::ostream& out, const BoolQuestion& question) {
 	return out << question.print();
 }
 
-Wt::WTreeTableNode* BoolQuestion::widget() {
-	Wt::WTreeTableNode* node = Question::widget();
+Wt::WContainerWidget* BoolQuestion::widget() {
 
 	Wt::WContainerWidget* container = new Wt::WContainerWidget();
 	Wt::WButtonGroup* group = new Wt::WButtonGroup(container);
@@ -97,6 +96,5 @@ Wt::WTreeTableNode* BoolQuestion::widget() {
 	yes->checked().connect(boost::bind(&BoolQuestion::setAnswer,  this, true));
 	no->checked().connect(boost::bind(&BoolQuestion::setAnswer, this, false));
 
-	node->setColumnWidget(1, container);
-	return node;
+	return container;
 }

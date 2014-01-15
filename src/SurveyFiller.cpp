@@ -15,10 +15,13 @@
 #include "Wt/WLink"
 #include "Wt/WSignal"
 #include "Wt/WText"
-#include "Wt/WTree"
-#include "Wt/WTreeTableNode"
+#include "Wt/WCssDecorationStyle"
+#include "Wt/WColor"
+#include "Wt/WLineEdit"
 
 #include "Question.h"
+
+#include <boost/bind.hpp>
 
 
 SurveyFiller::SurveyFiller(std::string title, std::string username) : title_(title),user_(username) {
@@ -31,8 +34,8 @@ SurveyFiller::SurveyFiller(std::string title, std::string username) : title_(tit
 	//Title
 	new Wt::WText(title_, this);
 	//Tree
-	questionTree_ = new Wt::WTreeTable(this);
-	fillQuestionTree();
+	questionTable = new Wt::WTable(this);
+	fillQuestionTable();
 	//Buttons
 	save_ = new Wt::WPushButton("Save", this);
 	save_->clicked().connect(this, &SurveyFiller::save);
@@ -57,23 +60,26 @@ void SurveyFiller::save() {
 	//}
 }
 
-void SurveyFiller::fillQuestionTree() {
-	//one column for answers
-	questionTree_->tree()->setSelectionMode(Wt::ExtendedSelection);
-	questionTree_->addColumn("Answers", 120);
+void SurveyFiller::fillQuestionTable() {
+	//default columns
+	questionTable->elementAt(0, 0)->addWidget(new Wt::WText("Path"));
+	questionTable->elementAt(0, 1)->addWidget(new Wt::WText("Question"));
+	questionTable->elementAt(0, 2)->addWidget(new Wt::WText("Answer"));
 
-	//rootnode
-	Wt::WTreeTableNode* root = new Wt::WTreeTableNode("Survey");
-	questionTree_->setTreeRoot(root, "Questions");
+	int i(1);
 	//add questions
-	for(Questionary::Iterator it = questionary_->begin(); it != questionary_->end(); it.levelForward()) {
-		root->addChildNode((*it)->widget());
-	}
-	root->expand();
-
-	//add optional to answered
 	for(Questionary::Iterator it = questionary_->begin(); it != questionary_->end(); ++it) {
+		questionTable->elementAt(i, 0)->addWidget(new Wt::WText(it.getPath().print()));
+		Wt::WCssDecorationStyle style;
+		style.setForegroundColor(Wt::WColor(0,255,0));
+		Wt::WText* question = new Wt::WText((*it)->getQuestion());
+		if((*it)->isOptional())  question->setDecorationStyle(style);
+		questionTable->elementAt(i, 1)->addWidget(question);
+		questionTable->elementAt(i, 2)->addWidget((*it)->widget());
+
+		//optional?
 		if((*it)->isOptional()) answered_.insert(*it);
+		++i;
 	}
 	updateAnswered();
 }

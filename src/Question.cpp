@@ -77,13 +77,3 @@ std::ostream& operator<<(std::ostream& out, const Question& question) {
 	return out << question.print();
 }
 
-Wt::WTreeTableNode* Question::widget() {
-	Wt::WCssDecorationStyle style;
-	style.setForegroundColor(Wt::WColor(0,255,0));
-
-	Wt::WTreeTableNode* node = new Wt::WTreeTableNode(getQuestion(), 0);
-	if(isOptional()) node->setDecorationStyle(style);
-
-	return node;
-}
-

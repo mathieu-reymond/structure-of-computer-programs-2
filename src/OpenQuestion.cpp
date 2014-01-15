@@ -85,14 +85,12 @@ std::ostream& operator<<(std::ostream& out, const OpenQuestion& openQuestion) {
 	return out << openQuestion.print();
 }
 
-Wt::WTreeTableNode* OpenQuestion::widget() {
-	Wt::WTreeTableNode* node = Question::widget();
+Wt::WContainerWidget* OpenQuestion::widget() {
 
 	Wt::WContainerWidget* container = new Wt::WContainerWidget();
 	Wt::WLineEdit* text = new Wt::WLineEdit(container);
 	text->changed().connect(boost::bind(&OpenQuestion::setAnswer, this, text->text().toUTF8()));
 
-	node->setColumnWidget(1, container);
-	return node;
+	return container;
 }
 

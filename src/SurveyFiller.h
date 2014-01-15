@@ -11,7 +11,7 @@
 #include"Questionary.h"
 #include "QuestionList.h"
 #include<Wt/WGroupBox>
-#include<Wt/WTreeTable>
+#include<Wt/WTable>
 #include<Wt/WPushButton>
 #include<string>
 #include<list>
@@ -22,7 +22,7 @@ public:
 	virtual ~SurveyFiller();
 
 private:
-	void fillQuestionTree();
+	void fillQuestionTable();
 	void save();
 
 	bool isCompleted(QuestionList& ql);
@@ -32,7 +32,7 @@ private:
 	std::string user_;
 	std::set<Question*> answered_;
 	Questionary *questionary_;
-	Wt::WTreeTable* questionTree_;
+	Wt::WTable* questionTable;
 	Wt::WPushButton* save_;
 	Wt::WPushButton* back_;
 };

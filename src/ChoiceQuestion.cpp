@@ -144,8 +144,7 @@ std::ostream& operator<<(std::ostream& out, const ChoiceQuestion& choiceQuestion
 	return out << choiceQuestion.print() << choiceQuestion.printChoices();
 }
 
-Wt::WTreeTableNode* ChoiceQuestion::widget() {
-	Wt::WTreeTableNode* node = Question::widget();
+Wt::WContainerWidget* ChoiceQuestion::widget() {
 
 	Wt::WContainerWidget* container = new Wt::WContainerWidget();
 	Wt::WComboBox* comboBox = new Wt::WComboBox(container);
@@ -154,6 +153,5 @@ Wt::WTreeTableNode* ChoiceQuestion::widget() {
 	}
 	comboBox->changed().connect(boost::bind(&ChoiceQuestion::setAnswer, this, comboBox->currentIndex()+1));
 
-	node->setColumnWidget(1, container);
-	return node;
+	return container;
 }
