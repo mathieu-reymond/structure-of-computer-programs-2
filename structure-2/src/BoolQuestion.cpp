@@ -89,7 +89,9 @@ Wt::WContainerWidget* BoolQuestion::widget() {
 
 	Wt::WContainerWidget* container = new Wt::WContainerWidget();
 	Wt::WButtonGroup* group = new Wt::WButtonGroup(container);
+	new Wt::WText("YES: ", container);
 	Wt::WRadioButton* yes = new Wt::WRadioButton(container);
+	new Wt::WText("NO: ", container);
 	Wt::WRadioButton* no = new Wt::WRadioButton(container);
 	group->addButton(yes);
 	group->addButton(no);
