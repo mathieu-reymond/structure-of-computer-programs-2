@@ -49,7 +49,7 @@ void Question::setQuestion(std::string q) {
 	}
 }
 
-bool Question::isOptional() {
+bool Question::isOptional() const{
 	return optional_;
 }
 /**
@@ -65,7 +65,9 @@ std::ostream& Question::save(std::ostream& out) {
  * @return a string representing this Question
  */
 std::string Question::print() const{
-	return getQuestion();
+	std::string print(getQuestion());
+	if(isOptional()) print.append("#opt");
+	return print;
 }
 /**
  * Write this Question on a stream

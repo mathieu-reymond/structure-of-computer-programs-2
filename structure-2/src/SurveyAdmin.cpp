@@ -10,6 +10,7 @@
 #include "Wt/WLink"
 #include "Wt/WObject"
 #include "Wt/WMessageBox"
+#include "Wt/WText"
 #include <string>
 #include <dirent.h>
 #include <stdio.h>
@@ -17,7 +18,7 @@
 #include <fstream>
 #include <sys/stat.h>
 #include <vector>
-#include <fstream>
+#include <sstream>
 #include <functional>
 
 SurveyAdmin::SurveyAdmin() {
@@ -94,11 +95,15 @@ void SurveyAdmin::fillTable() {
 			std::string path("./");
 			path.append(ent->d_name);
 			if((subdir = opendir(path.c_str())) != NULL) {
+				int nbAnswers(0);
+				int hasEns(false);
 				while((subent = readdir(subdir)) != NULL) {
-					std::string extension(".ens");
+					std::string ens(".ens");
+					std::string ena(".ena");
 					std::string filename(subent->d_name);
 					//has questionary extension ?
-					if(filename.length() > 4 && filename.substr(filename.length()-extension.length(), std::string::npos) == extension) {
+					if(filename.length() > 4 && filename.substr(filename.length()-ens.length(), std::string::npos) == ens) {
+						hasEns = true;
 						//add to table
 						std::string filepath(path);
 						filepath.append("/");
@@ -117,6 +122,19 @@ void SurveyAdmin::fillTable() {
 						table_->elementAt(row, 2)->addWidget(remove);
 						row++;
 					}
+					if(filename.length() > 4 && filename.substr(filename.length()-ena.length(), std::string::npos) == ena){
+						nbAnswers++;
+					}
+				}
+				if(hasEns) {
+					std::string answered("Answered ");
+					std::stringstream s;
+					s << nbAnswers;
+					std::string n;
+					s >> n;
+					answered.append(n);
+					answered.append(" time(s).");
+					table_->elementAt(row-1, 3)->addWidget(new Wt::WText(answered));
 				}
 				closedir (subdir);
 			}
@@ -127,18 +145,30 @@ void SurveyAdmin::fillTable() {
 }
 
 void SurveyAdmin::upload() {
-	//copy paste in desired location
-	std::string destPath("./");
-	destPath.append(title_->text().toUTF8());
-	//create dir
-	const std::string dirPath(destPath);
-	umask(000);
-	mkdir(dirPath.c_str(), 0777);
-	//copy file in dir
-	destPath.append("/questions.ens");
-	std::ifstream src(file_->spoolFileName().c_str(), std::ios::binary);
-	std::ofstream dst(destPath.c_str(), std::ios::binary);
-	dst << src.rdbuf();
-	//refresh page
-	refresh();
+	if(title_->text() == Wt::WString::Empty) {
+		Wt::WMessageBox* message = new Wt::WMessageBox("Warning",
+				"Please give a title.",
+				Wt::Information,
+				Wt::Ok);
+		message->buttonClicked().connect(std::bind([=] () {
+			delete message;
+		}));
+		message->show();
+	}
+	else {
+		//copy paste in desired location
+		std::string destPath("./");
+		destPath.append(title_->text().toUTF8());
+		//create dir
+		const std::string dirPath(destPath);
+		umask(000);
+		mkdir(dirPath.c_str(), 0777);
+		//copy file in dir
+		destPath.append("/questions.ens");
+		std::ifstream src(file_->spoolFileName().c_str(), std::ios::binary);
+		std::ofstream dst(destPath.c_str(), std::ios::binary);
+		dst << src.rdbuf();
+		//refresh page
+		refresh();
+	}
 }

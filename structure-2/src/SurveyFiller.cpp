@@ -11,6 +11,7 @@
 #include <map>
 #include <set>
 
+#include "Wt/WApplication"
 #include "Wt/WGlobal"
 #include "Wt/WLink"
 #include "Wt/WSignal"
@@ -32,12 +33,6 @@ SurveyFiller::SurveyFiller(std::string title, std::string username) : title_(tit
 	std::cout << "filename : " << filename << std::endl;
 	//Questionary
 	questionary_ = new Questionary(filename);
-	for(Questionary::Iterator it = questionary_->begin(); it != questionary_->end(); ++it) {
-		std::cout << it.getPath().print() << std::endl;
-		//std::cout << " #opt:" << (*it)->isOptional();
-		//std::cout << " Q:" << (*it)->getQuestion() << std::endl;
-	}
-	std::cout << "printed" << std::endl;
 	//Title
 	new Wt::WText(title_, this);
 	//Tree
@@ -69,6 +64,7 @@ void SurveyFiller::save() {
 				Wt::Ok);
 		message->buttonClicked().connect(std::bind([=] () {
 			delete message;
+			Wt::WApplication::instance()->setInternalPath("/select", true);
 		}));
 		message->show();
 	}
@@ -79,6 +75,7 @@ void SurveyFiller::save() {
 				Wt::Ok);
 		message->buttonClicked().connect(std::bind([=] () {
 			delete message;
+
 		}));
 		message->show();
 	}

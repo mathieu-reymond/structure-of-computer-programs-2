@@ -96,7 +96,7 @@ std::ostream& AnswerQuestion<T>::save(std::ostream& out) {
  */
 template<typename T>
 std::string AnswerQuestion<T>::print() const {
-	return getQuestion();
+	return Question::print();
 }
 
 /**

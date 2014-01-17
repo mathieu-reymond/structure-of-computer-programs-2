@@ -18,6 +18,7 @@ SurveySelector::SurveySelector() {
 	//Surveys
 	surveys_ = new Wt::WSelectionBox(this);
 	fillSurveys();
+	surveys_->changed().connect(this, &SurveySelector::checkUser);
 	//Begin
 	begin_ = new Wt::WPushButton("Begin", this);
 	begin_->setDisabled(true);

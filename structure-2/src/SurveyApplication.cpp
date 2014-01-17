@@ -5,6 +5,7 @@
  *      Author: Mathieu
  */
 
+#include "Wt/WBootstrapTheme"
 #include "SurveyApplication.h"
 #include "SurveySelector.h"
 #include "SurveyFiller.h"

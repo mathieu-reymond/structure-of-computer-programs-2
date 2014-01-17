@@ -38,7 +38,7 @@ Wt::WApplication *createApplication(const Wt::WEnvironment& env)
 int main(int argc, char *argv[]) {
 	const char *custom_argv[] = {
 			"hello",
-			"--docroot=.",
+			"--docroot=/usr/share/Wt/resources/",
 			"--http-address=127.0.0.1",
 			"--http-port=8080"
 	};

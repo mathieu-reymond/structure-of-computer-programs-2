@@ -18,7 +18,7 @@ public:
 
 	std::string getQuestion() const;
 	void setQuestion(std::string q);
-	virtual bool isOptional();
+	virtual bool isOptional() const;
 
 	virtual void ask() = 0;
 	virtual std::ostream& save(std::ostream& out);
